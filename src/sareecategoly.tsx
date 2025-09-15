@@ -11,6 +11,15 @@ import {
   ShoppingBag,
   Star,
   Menu,
+  Sparkles,
+  Crown,
+  Award,
+  Filter,
+  Grid3X3,
+  List,
+  Eye,
+  Share2,
+  ArrowRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -50,6 +59,8 @@ export default function SareeCatalog() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [showFilters, setShowFilters] = useState(false);
 
   // ---- Utils ----
   async function tryFetchJson(url: string): Promise<any | null> {
@@ -187,45 +198,117 @@ export default function SareeCatalog() {
   // ---- Loading ----
   if (loading)
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
-          <p className="text-xl font-medium">Loading your collection...</p>
-        </div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-secondary/20 to-primary/5">
+        <motion.div
+          className="text-center space-y-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="relative">
+            <div className="w-20 h-20 border-4 border-primary/20 border-t-primary rounded-full animate-spin mx-auto"></div>
+            <Sparkles className="w-8 h-8 text-primary absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+          </div>
+          <div className="space-y-2">
+            <h2 className="text-2xl font-bold text-primary">
+              Curating Excellence
+            </h2>
+            <p className="text-muted-foreground">
+              Unveiling our premium saree collection...
+            </p>
+          </div>
+        </motion.div>
       </div>
     );
 
   // ---- Error ----
   if (error)
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Card className="p-8 text-center max-w-md">
-          <CardContent>
-            <p className="text-destructive text-lg font-semibold mb-4">
-              {error}
-            </p>
-            <Button onClick={loadCatalog} variant="outline">
-              Try Again
-            </Button>
-          </CardContent>
-        </Card>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-secondary/20">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Card className="p-8 text-center max-w-md shadow-2xl border-0 bg-card/80 backdrop-blur-sm">
+            <CardContent className="space-y-4">
+              <div className="w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center mx-auto">
+                <X className="w-8 h-8 text-destructive" />
+              </div>
+              <h3 className="text-xl font-semibold text-foreground">
+                Oops! Something went wrong
+              </h3>
+              <p className="text-muted-foreground">{error}</p>
+              <Button onClick={loadCatalog} className="w-full">
+                <ArrowRight className="w-4 h-4 mr-2" />
+                Try Again
+              </Button>
+            </CardContent>
+          </Card>
+        </motion.div>
       </div>
     );
 
   // ---- Main UI ----
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background">
+      {/* Hero Section */}
+      <section className="relative h-[70vh] overflow-hidden bg-gradient-to-br from-primary/5 via-secondary/10 to-accent/5 paisley-pattern">
+        <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-transparent to-background/80" />
+        <div className="relative z-10 h-full flex items-center justify-center text-center px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="max-w-4xl space-y-6"
+          >
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <Crown className="w-8 h-8 text-primary" />
+              <Badge
+                variant="secondary"
+                className="px-4 py-2 text-sm font-medium"
+              >
+                Premium Collection
+              </Badge>
+            </div>
+            <h1 className="text-5xl md:text-7xl font-bold text-primary mb-6 text-balance">
+              Saree Studio
+            </h1>
+            <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto text-pretty">
+              Where tradition meets elegance. Discover our curated collection of
+              exquisite sarees crafted for the modern woman.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+              <Button size="lg" className="px-8 py-4 text-lg font-medium">
+                <Sparkles className="w-5 h-5 mr-2" />
+                Explore Collection
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="px-8 py-4 text-lg font-medium bg-transparent"
+              >
+                <Award className="w-5 h-5 mr-2" />
+                Premium Catalog
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
+      </section>
+
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border shadow-sm">
+      <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-xl border-b border-border shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
-              <h1 className="text-2xl sm:text-3xl font-bold text-primary">
-                Saree Studio
-              </h1>
-              <Badge variant="secondary" className="hidden sm:inline-flex">
-                Premium Collection
-              </Badge>
+              <Crown className="w-8 h-8 text-primary" />
+              <div>
+                <h2 className="text-xl font-bold text-primary">Saree Studio</h2>
+                <p className="text-xs text-muted-foreground">
+                  Premium Collection
+                </p>
+              </div>
             </div>
 
             <nav className="hidden md:flex items-center space-x-8">
@@ -249,7 +332,7 @@ export default function SareeCatalog() {
               </a>
               <Button size="sm" className="ml-4">
                 <ShoppingBag className="w-4 h-4 mr-2" />
-                Cart
+                Cart ({favorites.size})
               </Button>
             </nav>
 
@@ -266,33 +349,81 @@ export default function SareeCatalog() {
       </header>
 
       {/* Search & Filters */}
-      <section className="bg-card/50 border-y border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col lg:flex-row gap-6 items-center">
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
-            <Input
-              placeholder="Search sarees, collections, or styles..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 h-12 text-lg"
-            />
-          </div>
-          <div className="flex gap-3 flex-wrap">
-            {["all", "silk", "cotton", "designer", "bridal", "casual"].map(
-              (category) => (
+      <section className="bg-card/30 border-y border-border backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex flex-col lg:flex-row gap-6 items-center">
+            <div className="flex-1 relative">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
+              <Input
+                placeholder="Search exquisite sarees, collections, or styles..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-12 h-14 text-lg border-2 border-border/50 focus:border-primary/50 bg-background/80 backdrop-blur-sm"
+              />
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="flex gap-2">
                 <Button
-                  key={category}
-                  variant={
-                    selectedCategory === category ? "default" : "outline"
-                  }
-                  onClick={() => setSelectedCategory(category)}
-                  className="capitalize"
+                  variant={viewMode === "grid" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setViewMode("grid")}
                 >
-                  {category === "all" ? "All Collections" : category}
+                  <Grid3X3 className="w-4 h-4" />
                 </Button>
-              )
-            )}
+                <Button
+                  variant={viewMode === "list" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setViewMode("list")}
+                >
+                  <List className="w-4 h-4" />
+                </Button>
+              </div>
+              <Button
+                variant="outline"
+                onClick={() => setShowFilters(!showFilters)}
+                className="gap-2"
+              >
+                <Filter className="w-4 h-4" />
+                Filters
+              </Button>
+            </div>
           </div>
+
+          <AnimatePresence>
+            {showFilters && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                className="mt-6 pt-6 border-t border-border"
+              >
+                <div className="flex gap-3 flex-wrap">
+                  {[
+                    "all",
+                    "silk",
+                    "cotton",
+                    "designer",
+                    "bridal",
+                    "casual",
+                    "party",
+                    "traditional",
+                  ].map((category) => (
+                    <Button
+                      key={category}
+                      variant={
+                        selectedCategory === category ? "default" : "outline"
+                      }
+                      onClick={() => setSelectedCategory(category)}
+                      className="capitalize"
+                      size="sm"
+                    >
+                      {category === "all" ? "All Collections" : category}
+                    </Button>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </section>
 
@@ -301,55 +432,174 @@ export default function SareeCatalog() {
         id="catalog"
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16"
       >
-        {filteredCatalog.map((category) => (
-          <section key={category.id} className="mb-16">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl sm:text-4xl font-bold text-primary mb-4">
-                {category.name}
-              </h2>
-              <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto"></div>
+        {filteredCatalog.map((category, categoryIndex) => (
+          <motion.section
+            key={category.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: categoryIndex * 0.1 }}
+            className="mb-20"
+          >
+            <div className="text-center mb-16">
+              <motion.div
+                initial={{ scale: 0.9 }}
+                animate={{ scale: 1 }}
+                transition={{ duration: 0.5, delay: categoryIndex * 0.1 + 0.2 }}
+                className="space-y-4"
+              >
+                <Badge
+                  variant="outline"
+                  className="px-4 py-2 text-sm font-medium mb-4"
+                >
+                  {category.name} Collection
+                </Badge>
+                <h2 className="text-4xl md:text-5xl font-bold text-primary mb-6 text-balance">
+                  {category.name}
+                </h2>
+                <div className="w-32 h-1 bg-gradient-to-r from-primary via-accent to-primary mx-auto rounded-full"></div>
+                <p className="text-lg text-muted-foreground max-w-2xl mx-auto text-pretty">
+                  Discover the finest collection of{" "}
+                  {category.name.toLowerCase()} sarees, each piece telling a
+                  story of craftsmanship and elegance.
+                </p>
+              </motion.div>
             </div>
 
-            {category.subfolders.map((sub) => {
+            {category.subfolders.map((sub, subIndex) => {
               const isActive = activeSubfolder === sub.id;
               const images = isActive ? sub.all : sub.preview;
               return (
-                <div key={sub.id} className="mb-12">
-                  <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-2xl font-semibold">{sub.name}</h3>
+                <motion.div
+                  key={sub.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: subIndex * 0.1 }}
+                  className="mb-16"
+                >
+                  <div className="flex items-center justify-between mb-8">
+                    <div className="space-y-2">
+                      <h3 className="text-2xl md:text-3xl font-semibold text-foreground">
+                        {sub.name}
+                      </h3>
+                      <p className="text-muted-foreground">
+                        {sub.all.length} exquisite pieces in this collection
+                      </p>
+                    </div>
                     {(sub.all.length > 6 || isActive) && (
                       <Button
-                        variant="ghost"
+                        variant="outline"
                         onClick={() => toggleSubfolder(sub.id)}
+                        className="gap-2"
                       >
-                        {isActive
-                          ? "Show Less"
-                          : `View All (${sub.all.length})`}
+                        {isActive ? (
+                          <>
+                            <ChevronLeft className="w-4 h-4" />
+                            Show Less
+                          </>
+                        ) : (
+                          <>
+                            View All ({sub.all.length})
+                            <ChevronRight className="w-4 h-4" />
+                          </>
+                        )}
                       </Button>
                     )}
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+
+                  <div
+                    className={`grid gap-8 ${
+                      viewMode === "grid"
+                        ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+                        : "grid-cols-1 md:grid-cols-2 gap-6"
+                    }`}
+                  >
                     {images.map((item, index) => (
-                      <Card
+                      <motion.div
                         key={item.id}
-                        className="group overflow-hidden hover:shadow-xl transition-all"
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.4, delay: index * 0.05 }}
+                        whileHover={{ y: -8 }}
+                        className="group"
                       >
-                        <div className="relative aspect-[3/4] overflow-hidden">
-                          <img
-                            src={item.image || "/placeholder.svg"}
-                            alt={item.name}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 cursor-pointer"
-                            onClick={() => openLightbox(images, index)}
-                          />
-                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
-                            <div className="flex gap-3">
+                        <Card className="overflow-hidden hover:shadow-2xl transition-all duration-500 border-0 bg-card/80 backdrop-blur-sm">
+                          <div className="relative aspect-[3/4] overflow-hidden">
+                            <img
+                              src={
+                                item.image ||
+                                "/placeholder.svg?height=600&width=450&query=elegant saree"
+                              }
+                              alt={item.name}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-pointer"
+                              onClick={() => openLightbox(images, index)}
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                              <div className="flex gap-3">
+                                <Button
+                                  size="sm"
+                                  variant="secondary"
+                                  className="backdrop-blur-sm bg-background/80"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    toggleFavorite(item.id);
+                                  }}
+                                >
+                                  <Heart
+                                    className={`w-4 h-4 ${
+                                      favorites.has(item.id)
+                                        ? "fill-current text-red-500"
+                                        : ""
+                                    }`}
+                                  />
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  className="backdrop-blur-sm"
+                                  onClick={() => openLightbox(images, index)}
+                                >
+                                  <Eye className="w-4 h-4 mr-2" />
+                                  View
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="secondary"
+                                  className="backdrop-blur-sm bg-background/80"
+                                >
+                                  <Share2 className="w-4 h-4" />
+                                </Button>
+                              </div>
+                            </div>
+                            <Badge className="absolute top-4 left-4 bg-primary/90 backdrop-blur-sm">
+                              Premium
+                            </Badge>
+                          </div>
+                          <CardContent className="p-6 space-y-4">
+                            <div>
+                              <h4 className="font-semibold text-lg mb-2 line-clamp-2 text-balance">
+                                {item.name}
+                              </h4>
+                              <p className="text-sm text-muted-foreground">
+                                Handcrafted with premium materials
+                              </p>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-1">
+                                {[...Array(5)].map((_, i) => (
+                                  <Star
+                                    key={i}
+                                    className="w-4 h-4 fill-current text-yellow-400"
+                                  />
+                                ))}
+                                <span className="text-sm ml-2 text-muted-foreground">
+                                  (4.9)
+                                </span>
+                              </div>
                               <Button
                                 size="sm"
-                                variant="secondary"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  toggleFavorite(item.id);
-                                }}
+                                variant="ghost"
+                                onClick={() => toggleFavorite(item.id)}
+                                className="hover:bg-red-50 hover:text-red-500"
                               >
                                 <Heart
                                   className={`w-4 h-4 ${
@@ -359,51 +609,27 @@ export default function SareeCatalog() {
                                   }`}
                                 />
                               </Button>
-                              <Button
-                                size="sm"
-                                onClick={() => openLightbox(images, index)}
-                              >
-                                View
-                              </Button>
                             </div>
-                          </div>
-                        </div>
-                        <CardContent className="p-6">
-                          <h4 className="font-semibold text-lg mb-2 line-clamp-2">
-                            {item.name}
-                          </h4>
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-1">
-                              {[...Array(5)].map((_, i) => (
-                                <Star
-                                  key={i}
-                                  className="w-4 h-4 fill-current text-yellow-400"
-                                />
-                              ))}
-                              <span className="text-sm ml-2">(4.8)</span>
+                            <div className="pt-2 border-t border-border/50">
+                              <div className="flex items-center justify-between">
+                                <span className="text-lg font-bold text-primary">
+                                  ₹12,999
+                                </span>
+                                <Button size="sm" className="gap-2">
+                                  <ShoppingBag className="w-4 h-4" />
+                                  Add to Cart
+                                </Button>
+                              </div>
                             </div>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => toggleFavorite(item.id)}
-                            >
-                              <Heart
-                                className={`w-4 h-4 ${
-                                  favorites.has(item.id)
-                                    ? "fill-current text-red-500"
-                                    : ""
-                                }`}
-                              />
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
                     ))}
                   </div>
-                </div>
+                </motion.div>
               );
             })}
-          </section>
+          </motion.section>
         ))}
       </main>
 
@@ -428,7 +654,7 @@ export default function SareeCatalog() {
                 variant="ghost"
                 size="sm"
                 onClick={closeLightbox}
-                className="absolute top-4 right-4 bg-black/50 text-white rounded-full"
+                className="absolute top-4 right-4 bg-black/50 text-white rounded-full hover:bg-black/70 z-10"
               >
                 <X className="w-5 h-5" />
               </Button>
@@ -436,27 +662,70 @@ export default function SareeCatalog() {
                 variant="ghost"
                 size="sm"
                 onClick={prevImage}
-                className="absolute left-4 bg-black/50 text-white rounded-full"
+                className="absolute left-4 bg-black/50 text-white rounded-full hover:bg-black/70 z-10"
               >
                 <ChevronLeft className="w-6 h-6" />
               </Button>
-              <img
-                src={lightboxItems[lightboxIndex]?.image || ""}
-                alt={lightboxItems[lightboxIndex]?.name || ""}
-                className="max-h-[90vh] max-w-[90vw] rounded-lg"
-              />
+              <div className="w-full flex justify-center">
+                <img
+                  src={lightboxItems[lightboxIndex]?.image || ""}
+                  alt={lightboxItems[lightboxIndex]?.name || ""}
+                  className="max-h-[90vh] max-w-[90vw] rounded-lg shadow-2xl"
+                />
+              </div>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={nextImage}
-                className="absolute right-4 bg-black/50 text-white rounded-full"
+                className="absolute right-4 bg-black/50 text-white rounded-full hover:bg-black/70 z-10"
               >
                 <ChevronRight className="w-6 h-6" />
               </Button>
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/70 text-white px-4 py-2 rounded-full backdrop-blur-sm">
+                <p className="text-sm font-medium">
+                  {lightboxItems[lightboxIndex]?.name}
+                </p>
+                <p className="text-xs text-gray-300">
+                  {lightboxIndex + 1} of {lightboxItems.length}
+                </p>
+              </div>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Footer */}
+      <footer className="bg-card/50 border-t border-border mt-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <div className="text-center space-y-8">
+            <div className="flex items-center justify-center gap-2">
+              <Crown className="w-8 h-8 text-primary" />
+              <h3 className="text-2xl font-bold text-primary">Saree Studio</h3>
+            </div>
+            <p className="text-muted-foreground max-w-2xl mx-auto text-pretty">
+              Celebrating the timeless beauty of Indian craftsmanship through
+              our curated collection of premium sarees.
+            </p>
+            <div className="flex justify-center gap-8 text-sm text-muted-foreground">
+              <a href="#" className="hover:text-primary transition-colors">
+                Privacy Policy
+              </a>
+              <a href="#" className="hover:text-primary transition-colors">
+                Terms of Service
+              </a>
+              <a href="#" className="hover:text-primary transition-colors">
+                Contact Us
+              </a>
+            </div>
+            <div className="pt-8 border-t border-border/50">
+              <p className="text-sm text-muted-foreground">
+                © 2024 Saree Studio. Crafted with love for tradition and
+                elegance.
+              </p>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
