@@ -48,8 +48,8 @@ interface Category {
 
 // ---------- Component ----------
 export default function SareeCatalog() {
-  const API_BASE = "https://saree-backend-j7zj.onrender.com";
-  // const API_BASE = "http://localhost:5000";
+  // const API_BASE = "https://saree-backend-j7zj.onrender.com";
+  const API_BASE = "http://localhost:5000";
   const [catalog, setCatalog] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeSubfolder, setActiveSubfolder] = useState<string | null>(null);
@@ -63,7 +63,7 @@ export default function SareeCatalog() {
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [showFilters, setShowFilters] = useState(false);
+  const [showFilters, setShowFilters] = useState(true);
   const categoryRefs = useRef<{ [key: string]: HTMLElement | null }>({});
 
   // ---- Utils ----
@@ -520,7 +520,10 @@ export default function SareeCatalog() {
                       variant="secondary"
                       className="ml-2 text-xs bg-primary/10"
                     >
-                      {category.subfolders.length}
+                      {category.subfolders.reduce(
+                        (total, sub) => total + sub.all.length,
+                        0
+                      )}
                     </Badge>
                   </Button>
                 ))}
