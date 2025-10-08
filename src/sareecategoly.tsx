@@ -48,8 +48,8 @@ interface Category {
 
 // ---------- Component ----------
 export default function SareeCatalog() {
-  // const API_BASE = "https://saree-backend-j7zj.onrender.com";
-  const API_BASE = "http://localhost:5000";
+  const API_BASE = "https://saree-backend-j7zj.onrender.com";
+  // const API_BASE = "http://localhost:5000";
   const [catalog, setCatalog] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeSubfolder, setActiveSubfolder] = useState<string | null>(null);
@@ -722,7 +722,8 @@ export default function SareeCatalog() {
                             <div className="pt-2 border-t border-border/50">
                               <div className="flex items-center justify-between">
                                 <span className="text-lg font-bold text-primary">
-                                  ₹12,999
+                                  {/* ₹{sub.name}
+                                  ₹12,999 */}
                                 </span>
                                 <Button size="sm" className="gap-2">
                                   <ShoppingBag className="w-4 h-4" />
